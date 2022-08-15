@@ -1,2 +1,2 @@
-# RaidZero-FRC-2021
-Raidzero's robot code for the 2021 FRC competition
+# RaidZero-Offseason
+Raidzero's offseason robot code (2021 bot)
