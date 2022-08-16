@@ -1,10 +1,10 @@
 package raidzero.robot.submodules;
 
-import raidzero.pathgen.PathPoint;
+// import raidzero.pathgen.PathPoint;
 import raidzero.robot.Constants.SwerveConstants;
 import raidzero.robot.dashboard.Tab;
-import raidzero.robot.pathing.HolonomicProfileFollower;
-import raidzero.robot.pathing.Path;
+// import raidzero.robot.pathing.HolonomicProfileFollower;
+// import raidzero.robot.pathing.Path;
 import raidzero.robot.utils.EncoderUtils;
 import raidzero.robot.wrappers.LazyTalonFX;
 
@@ -13,8 +13,6 @@ import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.sensors.CANCoder;
-
-import org.apache.commons.math3.util.FastMath;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -62,7 +60,7 @@ public class SwerveModule extends Submodule {
     private double currentRotorPositionTicks = 0.0;
 
     private ControlState controlState = ControlState.VELOCITY;
-    private HolonomicProfileFollower profileFollower;
+    // private HolonomicProfileFollower profileFollower;
 
     private NetworkTableEntry rotorAngleEntry;
     private NetworkTableEntry rotorTicksEntry;
@@ -82,8 +80,8 @@ public class SwerveModule extends Submodule {
         motor = new LazyTalonFX(motorId);
         rotor = new LazyTalonFX(rotorId);
         rotorExternalEncoder = new CANCoder(quadrant);
-        profileFollower = new HolonomicProfileFollower(motor, rotor, 
-            EncoderUtils::inchesToTicks, EncoderUtils::rotorDegreesToTicks);
+        // profileFollower = new HolonomicProfileFollower(motor, rotor, 
+            // EncoderUtils::inchesToTicks, EncoderUtils::rotorDegreesToTicks);
         zeroAngle = initialAngle;
 
         motor.configFactoryDefault();
@@ -162,13 +160,13 @@ public class SwerveModule extends Submodule {
      * Reads cached inputs & calculate outputs.
      */
     public void update(double timestamp) {
-        if (controlState == ControlState.PATHING) {
-            // System.out.println("updating");
-            profileFollower.update();
-            outputMotorProfile = profileFollower.getMotorOutput();
-            outputRotorProfile = profileFollower.getRotorOutput();
-            // System.out.println("MP: " + outputMotorProfile + " | RP: " + outputRotorProfile);
-        }
+        // if (controlState == ControlState.PATHING) {
+        //     // System.out.println("updating");
+        //     profileFollower.update();
+        //     outputMotorProfile = profileFollower.getMotorOutput();
+        //     outputRotorProfile = profileFollower.getRotorOutput();
+        //     // System.out.println("MP: " + outputMotorProfile + " | RP: " + outputRotorProfile);
+        // }
         currentRotorPositionTicks = rotor.getSelectedSensorPosition();
         // System.out.println("Q" + quadrant + ": pos=" + getRotorPosition() * SwerveConstants.ROTOR_REVOLUTION_RATIO + " target=" + outputRotorPosition * SwerveConstants.ROTOR_REVOLUTION_RATIO);
         rotorAngleEntry.setDouble(-((1 + (getRotorPosition() % 1)) % 0.5));
@@ -284,7 +282,7 @@ public class SwerveModule extends Submodule {
         setControlState(ControlState.VELOCITY);
 
         motor.setInverted(angleAdjustmentMotorPolarity);
-        outputMotorVelocity = velocity * FastMath.pow(1 - Math.abs(dPos), 4);
+        outputMotorVelocity = velocity * Math.pow(1 - Math.abs(dPos), 4);
     }
 
     /**
@@ -292,13 +290,13 @@ public class SwerveModule extends Submodule {
      */
     public void setVectorVelocity(double[] normalizedV, double speedLimit) {
         // set the velocity to the magnitude of vector v scaled to the maximum desired speed
-        setMotorVelocity(speedLimit * FastMath.hypot(normalizedV[0], normalizedV[1])
+        setMotorVelocity(speedLimit * Math.hypot(normalizedV[0], normalizedV[1])
                 * SwerveConstants.MAX_MOTOR_SPEED_DRIVING);
         // set rotor to the theta of vector v if the magnitude of the vector is not too small
         if (Math.abs(outputMotorVelocity) < 0.1) {
             return;
         }
-        setRotorPos(FastMath.toDegrees(FastMath.atan2(normalizedV[1], normalizedV[0])));
+        setRotorPos(Math.toDegrees(Math.atan2(normalizedV[1], normalizedV[0])));
     }
 
     /**
@@ -373,50 +371,50 @@ public class SwerveModule extends Submodule {
     /**
      * Executes a path using a holonomic profile follower.
      */
-    public void pushPath(Path path) {
-        if (controlState == ControlState.PATHING) {
-            return;
-        }
-        stop();
-        setControlState(ControlState.PATHING);
-        double moduloed = currentRotorPositionTicks % SwerveConstants.ROTOR_REVOLUTION_RATIO;
-        // System.out.println("From: " + currentRotorPositionTicks + " To: " + moduloed);
+    // public void pushPath(Path path) {
+    //     if (controlState == ControlState.PATHING) {
+    //         return;
+    //     }
+    //     stop();
+    //     setControlState(ControlState.PATHING);
+    //     double moduloed = currentRotorPositionTicks % SwerveConstants.ROTOR_REVOLUTION_RATIO;
+    //     // System.out.println("From: " + currentRotorPositionTicks + " To: " + moduloed);
 
-        rotor.setSelectedSensorPosition(moduloed);
-        outputRotorPosition = (moduloed / SwerveConstants.ROTOR_REVOLUTION_RATIO + 1.0) % 1.0;
-        // rotor.setSelectedSensorPosition(EncoderUtils.rotorDegreesToTicks(path.getPathPoints()[0].angle));
-        // outputRotorPosition = path.getPathPoints()[0].angle / 360.0;
-        // zeroRotor();
+    //     rotor.setSelectedSensorPosition(moduloed);
+    //     outputRotorPosition = (moduloed / SwerveConstants.ROTOR_REVOLUTION_RATIO + 1.0) % 1.0;
+    //     // rotor.setSelectedSensorPosition(EncoderUtils.rotorDegreesToTicks(path.getPathPoints()[0].angle));
+    //     // outputRotorPosition = path.getPathPoints()[0].angle / 360.0;
+    //     // zeroRotor();
 
-        System.out.println("Q" + quadrant + " path points:");
-        PathPoint.printPathPoints(path.getPathPoints());
-        System.out.println("=======================================");
+    //     System.out.println("Q" + quadrant + " path points:");
+    //     PathPoint.printPathPoints(path.getPathPoints());
+    //     System.out.println("=======================================");
 
-        profileFollower.reset();
-        profileFollower.start(path.getPathPoints());
-    }
+    //     profileFollower.reset();
+    //     profileFollower.start(path.getPathPoints());
+    // }
 
-    public void enableProfile() {
-        // System.out.println("Q" + quadrant + ": polarity=" + angleAdjustmentMotorPolarity + " mpc=" + motor.getMotionProfileTopLevelBufferCount());
-        motor.setInverted(angleAdjustmentMotorPolarity);
-        profileFollower.enable();
-    }
+    // public void enableProfile() {
+    //     // System.out.println("Q" + quadrant + ": polarity=" + angleAdjustmentMotorPolarity + " mpc=" + motor.getMotionProfileTopLevelBufferCount());
+    //     motor.setInverted(angleAdjustmentMotorPolarity);
+    //     profileFollower.enable();
+    // }
 
-    public boolean isDoneWaitingForFill() {
-        return profileFollower.isDoneWaitingForFill();
-    }
+    // public boolean isDoneWaitingForFill() {
+    //     return profileFollower.isDoneWaitingForFill();
+    // }
 
-    /**
-     * Returns whether the swerve has finished following a path.
-     * 
-     * @return if the drive is finished pathing
-     */
-    public boolean isFinishedWithPath() {
-        if (profileFollower == null || controlState != ControlState.PATHING) {
-            return false;
-        }
-        // System.out.println("Q" + quadrant + " finished? " + profileFollower.isFinished());
-        return profileFollower.isFinished();
-    }
+    // /**
+    //  * Returns whether the swerve has finished following a path.
+    //  * 
+    //  * @return if the drive is finished pathing
+    //  */
+    // public boolean isFinishedWithPath() {
+    //     if (profileFollower == null || controlState != ControlState.PATHING) {
+    //         return false;
+    //     }
+    //     // System.out.println("Q" + quadrant + " finished? " + profileFollower.isFinished());
+    //     return profileFollower.isFinished();
+    // }
 
 }

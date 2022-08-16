@@ -1,7 +1,6 @@
 package raidzero.robot.teleop;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import raidzero.robot.submodules.Swerve;
 import raidzero.robot.utils.JoystickUtils;
@@ -61,15 +60,15 @@ public class Teleop {
         */
         // boolean turning = p.getRawButton(12);
         // swerve.fieldOrientedDrive(
-        //     JoystickUtils.deadband(p.getX(Hand.kLeft) * (p.getRawButton(1) ? 1 : 0.5)),
-        //     JoystickUtils.deadband(p.getY(Hand.kLeft) * (p.getRawButton(1) ? -1 : -0.5)),
-        //     //JoystickUtils.deadband(p.getX(Hand.kRight)));
+        //     JoystickUtils.deadband(p.getLeftX() * (p.getRawButton(1) ? 1 : 0.5)),
+        //     JoystickUtils.deadband(p.getLeftY() * (p.getRawButton(1) ? -1 : -0.5)),
+        //     //JoystickUtils.deadband(p.getRightX()));
         //     (turning) ? JoystickUtils.deadband(p.getRawAxis(2)) * (p.getRawButton(1) ? 0.5 : 0.25) : 0);
 
         swerve.fieldOrientedDrive(
-            JoystickUtils.deadband(p.getX(Hand.kLeft)), 
-            JoystickUtils.deadband(p.getY(Hand.kLeft)), 
-            JoystickUtils.deadband(p.getX(Hand.kRight))
+            JoystickUtils.deadband(p.getLeftX()), 
+            JoystickUtils.deadband(p.getLeftY()), 
+            JoystickUtils.deadband(p.getRightX())
         );
 
         /**

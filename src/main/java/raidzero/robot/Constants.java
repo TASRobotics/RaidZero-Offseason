@@ -5,8 +5,6 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import org.apache.commons.math3.util.FastMath;
-
 public class Constants {
     /**
      * Swerve Constants
@@ -21,7 +19,7 @@ public class Constants {
         // Robot dimensions
         // public static final double ROBOT_RADIUS = 30.0 / Math.sqrt(2);
         public static final double ROBOT_WIDTH = 23.0; // 23.0 inches
-        public static final double ROBOT_RADIUS = FastMath.hypot(ROBOT_WIDTH, ROBOT_WIDTH) / 2.0;
+        public static final double ROBOT_RADIUS = Math.hypot(ROBOT_WIDTH, ROBOT_WIDTH) / 2.0;
 
         // Module Angles
         public static final double[] MODULE_ANGLES = {

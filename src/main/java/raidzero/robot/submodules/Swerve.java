@@ -3,18 +3,13 @@ package raidzero.robot.submodules;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import raidzero.pathgen.HolonomicPathGenerator;
-import raidzero.pathgen.PathGenerator;
 import raidzero.robot.Constants;
 import raidzero.robot.Constants.PathConstants;
 import raidzero.robot.Constants.SwerveConstants;
 import raidzero.robot.dashboard.Tab;
-import raidzero.robot.pathing.HolonomicPath;
-import raidzero.robot.pathing.Path;
 import raidzero.robot.submodules.SwerveModule.TargetPolarityTuple;
 import raidzero.robot.utils.JoystickUtils;
 import raidzero.robot.wrappers.SendablePigeon;
@@ -22,7 +17,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import org.apache.commons.math3.util.FastMath;
 
 public class Swerve extends Submodule {
 
@@ -61,7 +55,7 @@ public class Swerve extends Submodule {
     // private double headingError = 0.0;
     private PIDController headingPID;
 
-    private Path[] pathToPush = new Path[4];
+    // private Path[] pathToPush = new Path[4];
     private Queue<Integer> pushPathModuleIdQueue = new LinkedList<>();
 
     // private SwerveModule d;
@@ -120,7 +114,7 @@ public class Swerve extends Submodule {
         pigey.getYawPitchRoll(ypr);
         if (!pushPathModuleIdQueue.isEmpty()) {
             int id = pushPathModuleIdQueue.remove();
-            modules[id].pushPath(pathToPush[id]);
+            // modules[id].pushPath(pathToPush[id]);
         }
         for (SwerveModule module : modules) {
             module.update(timestamp);
@@ -185,7 +179,7 @@ public class Swerve extends Submodule {
      * @param omegaR angular velocity of the swerve
      */
     public void drive(double vX, double vY, double omegaR) {
-        double mag = FastMath.hypot(vX + (Constants.SQRTTWO * omegaR / 2),
+        double mag = Math.hypot(vX + (Constants.SQRTTWO * omegaR / 2),
                 vY + (Constants.SQRTTWO * omegaR / 2));
         double coef = 1;
         if (mag > 1) {
@@ -257,69 +251,69 @@ public class Swerve extends Submodule {
         return modules[moduleId].getRotorPosition();
     }
 
-    public boolean isDoneWaitingForFill() {
-        if (controlState != ControlState.PATHING) {
-            return false;
-        }
-        for (SwerveModule module : modules) {
-            if (!module.isDoneWaitingForFill()) {
-                return false;
-            }
-        }
-        return true;
-    }
+    // public boolean isDoneWaitingForFill() {
+    //     if (controlState != ControlState.PATHING) {
+    //         return false;
+    //     }
+    //     for (SwerveModule module : modules) {
+    //         if (!module.isDoneWaitingForFill()) {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
 
-    public void enableProfile() {
-        if (controlState != ControlState.PATHING) {
-            return;
-        }
-        for (SwerveModule module : modules) {
-            module.enableProfile();
-        }
-    }
+    // public void enableProfile() {
+    //     if (controlState != ControlState.PATHING) {
+    //         return;
+    //     }
+    //     for (SwerveModule module : modules) {
+    //         module.enableProfile();
+    //     }
+    // }
 
     /**
      * Pushes a holonomic path.
      * 
      * @param path the holonomic path to execute
      */
-    public void pushHolonomicPath(HolonomicPath path) {
-        if (controlState == ControlState.PATHING) {
-            return;
-        }
-        controlState = ControlState.PATHING;
+    // public void pushHolonomicPath(HolonomicPath path) {
+    //     if (controlState == ControlState.PATHING) {
+    //         return;
+    //     }
+    //     controlState = ControlState.PATHING;
 
-        notifier.startPeriodic(0.001 * PathConstants.TRANSMIT_PERIOD_MS);
+    //     notifier.startPeriodic(0.001 * PathConstants.TRANSMIT_PERIOD_MS);
 
-        for (int i = 0; i < 4; ++i) {
-            pushPathModuleIdQueue.add(i);
-            pathToPush[i] = new Path(
-                HolonomicPathGenerator.generateModulePath(
-                    path.getPathPoints(),
-                    Constants.SwerveConstants.MODULE_ANGLES[i],
-                    Constants.SwerveConstants.ROBOT_RADIUS
-                )
-            );
-        }
-    }
+    //     for (int i = 0; i < 4; ++i) {
+    //         pushPathModuleIdQueue.add(i);
+    //         pathToPush[i] = new Path(
+    //             HolonomicPathGenerator.generateModulePath(
+    //                 path.getPathPoints(),
+    //                 Constants.SwerveConstants.MODULE_ANGLES[i],
+    //                 Constants.SwerveConstants.ROBOT_RADIUS
+    //             )
+    //         );
+    //     }
+    // }
 
     /**
      * Returns whether the swerve has finished following a path.
      * 
      * @return if the swerve is finished pathing
      */
-    public boolean isFinishedWithPath() {
-        if (controlState != ControlState.PATHING) {
-            return false;
-        }
-        // return modules[0].isFinishedWithPath() && modules[1].isFinishedWithPath();// && modules[2].isFinishedWithPath();
-        for (SwerveModule module : modules) {
-            if (!module.isFinishedWithPath()) {
-                return false;
-            }
-        }
-        return true;
-    }
+    // public boolean isFinishedWithPath() {
+    //     if (controlState != ControlState.PATHING) {
+    //         return false;
+    //     }
+    //     // return modules[0].isFinishedWithPath() && modules[1].isFinishedWithPath();// && modules[2].isFinishedWithPath();
+    //     for (SwerveModule module : modules) {
+    //         if (!module.isFinishedWithPath()) {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
 
     public void test(XboxController c) {
 
@@ -335,11 +329,11 @@ public class Swerve extends Submodule {
         if (c.getYButtonPressed()) {
             testmodule = modules[3];
         }
-            testmodule.setVectorVelocity(new double[] {JoystickUtils.deadband(-c.getY(Hand.kLeft)),
-            JoystickUtils.deadband(c.getX(Hand.kLeft))}, 1);
-            // d.setMotorVelocity(JoystickUtils.deadband(c.getY(Hand.kRight))* 40000);
-            // d.setRotorPos(JoystickUtils.deadband(c.getY(Hand.kLeft)) * 360 / (4));
-        if (c.getTriggerAxis(Hand.kLeft) > 0.5) {
+            testmodule.setVectorVelocity(new double[] {JoystickUtils.deadband(-c.getLeftY()),
+            JoystickUtils.deadband(c.getLeftX())}, 1);
+            // d.setMotorVelocity(JoystickUtils.deadband(c.getRightY())* 40000);
+            // d.setRotorPos(JoystickUtils.deadband(c.getLeftY()) * 360 / (4));
+        if (c.getLeftTriggerAxis() > 0.5) {
             testmodule.setRotorPos(90);
         }
     }
