@@ -1,5 +1,6 @@
 package raidzero.robot.submodules;
 
+import raidzero.robot.Constants;
 // import raidzero.pathgen.PathPoint;
 import raidzero.robot.Constants.SwerveConstants;
 import raidzero.robot.dashboard.Tab;
@@ -366,6 +367,10 @@ public class SwerveModule extends Submodule {
      */
     public double getRotorPosition() {
         return currentRotorPositionTicks / SwerveConstants.ROTOR_REVOLUTION_RATIO;
+    }
+
+    public void setOpenLoopRampRate(double ramprate) {
+        motor.configOpenloopRamp(ramprate, Constants.TIMEOUT_MS);
     }
 
     /**

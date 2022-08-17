@@ -212,14 +212,15 @@ public class Swerve extends Submodule {
         // if (omega < -1)
         // omega = -1;
 
-        if (Math.abs(rX) > 0) {
-            // for relative control
-            omega = rX;
-            lastAngle = heading;
-        } else {
-            System.out.println("Holding PID");
-            omega = headingPID.calculate(heading, lastAngle);
-        }
+        // if (Math.abs(rX) > 0) {
+        //     // for relative control
+        //     omega = rX;
+        //     lastAngle = heading;
+        // } else {
+        //     System.out.println("Holding PID");
+        //     omega = headingPID.calculate(heading, lastAngle);
+        // }
+        omega = rX;
 
         
 
@@ -249,6 +250,12 @@ public class Swerve extends Submodule {
      */
     public double getModuleRotorPosition(int moduleId) {
         return modules[moduleId].getRotorPosition();
+    }
+
+    public void setOpenLoopRampRate(double ramprate) {
+        for(SwerveModule mod : modules) {
+            mod.setOpenLoopRampRate(ramprate);
+        }
     }
 
     // public boolean isDoneWaitingForFill() {

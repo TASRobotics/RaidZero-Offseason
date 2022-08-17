@@ -3,7 +3,7 @@ package raidzero.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 
-import raidzero.robot.auto.AutoRunner;
+// import raidzero.robot.auto.AutoRunner;
 import raidzero.robot.teleop.Teleop;
 import raidzero.robot.submodules.SubmoduleManager;
 import raidzero.robot.submodules.Swerve;
@@ -18,7 +18,7 @@ public class Robot extends TimedRobot {
     private static final Teleop teleop = Teleop.getInstance();
     private static final Swerve swerve = Swerve.getInstance();
 
-    private AutoRunner autoRunner;
+    // private AutoRunner autoRunner;
 
     /**
      * Runs only once at the start of robot code execution.
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
         );
         submoduleManager.onInit();
 
-        autoRunner = new AutoRunner();
+        // autoRunner = new AutoRunner();
     }
 
     /**
@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         // Stop autonomous
-        autoRunner.stop();
+        // autoRunner.stop();
         submoduleManager.onStop(Timer.getFPGATimestamp());
     }
 
@@ -51,8 +51,8 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         submoduleManager.onStart(Timer.getFPGATimestamp());
 
-        autoRunner.readSendableSequence();
-        autoRunner.start();
+        // autoRunner.readSendableSequence();
+        // autoRunner.start();
     }
 
     /**
@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         double timestamp = Timer.getFPGATimestamp();
         // System.out.println("tx full: " + RobotController.getCANStatus().txFullCount);
-        autoRunner.onLoop(timestamp);
+        // autoRunner.onLoop(timestamp);
         submoduleManager.onLoop(timestamp);
     }
 
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         // Stop the autonomous
-        autoRunner.stop();
+        // autoRunner.stop();
 
         // Start the teleop handler
         teleop.onStart();

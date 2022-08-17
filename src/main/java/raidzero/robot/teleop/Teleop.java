@@ -1,7 +1,8 @@
 package raidzero.robot.teleop;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import raidzero.robot.submodules.Swerve;
 import raidzero.robot.utils.JoystickUtils;
 
@@ -17,6 +18,9 @@ public class Teleop {
     private static boolean shift2 = false;
     private static double intakeOut = 0;
     private boolean autoDisabled = true;
+
+    private double ramprate = 0.0;
+    // private SlewRateLimiter slew = new SlewRateLimiter(rateLimit)
 
     public static Teleop getInstance() {
         if (instance == null) {
@@ -66,10 +70,16 @@ public class Teleop {
         //     (turning) ? JoystickUtils.deadband(p.getRawAxis(2)) * (p.getRawButton(1) ? 0.5 : 0.25) : 0);
 
         swerve.fieldOrientedDrive(
-            JoystickUtils.deadband(p.getLeftX()), 
-            JoystickUtils.deadband(p.getLeftY()), 
-            JoystickUtils.deadband(p.getRightX())
+            JoystickUtils.deadband(Math.pow(p.getLeftY(), 3))*0.5, 
+            JoystickUtils.deadband(Math.pow(p.getLeftX(), 3))*0.5, 
+            JoystickUtils.deadband(Math.pow(p.getRightX(), 3))*0.5
         );
+
+        // SmartDashboard.putNumber("Ramp rate", ramprate);
+        ramprate = SmartDashboard.getNumber("Ramp rate", ramprate);
+        swerve.setOpenLoopRampRate(ramprate);
+
+        SmartDashboard.putNumber("testing", ramprate);
 
         /**
          * DO NOT CONTINUOUSLY CALL THE ZERO FUNCTION its not that bad but the absolute encoders are
