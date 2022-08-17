@@ -1,22 +1,17 @@
 package raidzero.robot.submodules;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import raidzero.robot.Constants;
-import raidzero.robot.Constants.PathConstants;
 import raidzero.robot.Constants.SwerveConstants;
 import raidzero.robot.dashboard.Tab;
 import raidzero.robot.submodules.SwerveModule.TargetPolarityTuple;
 import raidzero.robot.utils.JoystickUtils;
 import raidzero.robot.wrappers.SendablePigeon;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
-import com.ctre.phoenix.sensors.PigeonIMU;
 
 public class Swerve extends Submodule {
 
