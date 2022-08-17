@@ -73,8 +73,8 @@ public class Teleop {
         // double leftX = JoystickUtils.deadband(Math.pow(p.getLeftX(), 3))*0.5;
         // double rightX = JoystickUtils.deadband(Math.pow(p.getRightX(), 3))*0.5;
 
-        double leftY = Math.pow(p.getLeftY(), 3)*0.5;
-        double leftX = Math.pow(p.getLeftX(), 3)*0.5;
+        double leftY = p.getLeftY();
+        double leftX = p.getLeftX();
         double rightX = Math.pow(p.getRightX(), 3)*0.5;
 
 
@@ -87,6 +87,8 @@ public class Teleop {
         SmartDashboard.putNumber("left y", leftY);
         SmartDashboard.putNumber("left x", leftX);
         SmartDashboard.putNumber("right x", rightX);
+
+        SmartDashboard.putNumber("joystick angle", Math.atan2(leftY, leftX) / (2*Math.PI) * 360);
 
 
 
