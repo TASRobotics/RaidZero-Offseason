@@ -69,11 +69,26 @@ public class Teleop {
         //     //JoystickUtils.deadband(p.getRightX()));
         //     (turning) ? JoystickUtils.deadband(p.getRawAxis(2)) * (p.getRawButton(1) ? 0.5 : 0.25) : 0);
 
+        // double leftY = JoystickUtils.deadband(Math.pow(p.getLeftY(), 3))*0.5;
+        // double leftX = JoystickUtils.deadband(Math.pow(p.getLeftX(), 3))*0.5;
+        // double rightX = JoystickUtils.deadband(Math.pow(p.getRightX(), 3))*0.5;
+
+        double leftY = Math.pow(p.getLeftY(), 3)*0.5;
+        double leftX = Math.pow(p.getLeftX(), 3)*0.5;
+        double rightX = Math.pow(p.getRightX(), 3)*0.5;
+
+
         swerve.fieldOrientedDrive(
-            JoystickUtils.deadband(Math.pow(p.getLeftY(), 3))*0.5, 
-            JoystickUtils.deadband(Math.pow(p.getLeftX(), 3))*0.5, 
-            JoystickUtils.deadband(Math.pow(p.getRightX(), 3))*0.5
+            leftY, 
+            leftX, 
+            rightX
         );
+
+        SmartDashboard.putNumber("left y", leftY);
+        SmartDashboard.putNumber("left x", leftX);
+        SmartDashboard.putNumber("right x", rightX);
+
+
 
         // SmartDashboard.putNumber("Ramp rate", ramprate);
         ramprate = SmartDashboard.getNumber("Ramp rate", ramprate);
