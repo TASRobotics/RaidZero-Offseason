@@ -6,7 +6,6 @@ import raidzero.robot.Constants.SwerveConstants;
 import raidzero.robot.dashboard.Tab;
 // import raidzero.robot.pathing.HolonomicProfileFollower;
 // import raidzero.robot.pathing.Path;
-import raidzero.robot.utils.EncoderUtils;
 import raidzero.robot.wrappers.LazyTalonFX;
 
 import java.util.Map;
